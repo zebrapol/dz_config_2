@@ -1,0 +1,5 @@
+<config>
+    <visualizerPath>/usr/local/bin/mermaid-cli</visualizerPath>
+    <packageName>express</packageName>
+    <outputFile>D:/dz_config_2/dependency_graph.mmd</outputFile>
+</config>
