@@ -1,6 +1,5 @@
 graph TD
     express --> accepts
-    express --> array-flatten
     express --> body-parser
     express --> content-disposition
     express --> content-type
@@ -16,16 +15,16 @@ graph TD
     express --> http-errors
     express --> merge-descriptors
     express --> methods
+    express --> mime-types
     express --> on-finished
+    express --> once
     express --> parseurl
-    express --> path-to-regexp
     express --> proxy-addr
     express --> qs
     express --> range-parser
-    express --> safe-buffer
+    express --> router
     express --> send
     express --> serve-static
-    express --> setprototypeof
     express --> statuses
     express --> type-is
     express --> utils-merge
@@ -94,8 +93,16 @@ graph TD
     finalhandler --> parseurl
     finalhandler --> statuses
     finalhandler --> unpipe
+    once --> wrappy
     proxy-addr --> forwarded
     proxy-addr --> ipaddr.js
+    router --> array-flatten
+    router --> is-promise
+    router --> methods
+    router --> parseurl
+    router --> path-to-regexp
+    router --> setprototypeof
+    router --> utils-merge
     send --> debug
     send --> destroy
     send --> encodeurl

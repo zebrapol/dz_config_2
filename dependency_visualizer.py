@@ -58,23 +58,32 @@ def build_dependency_graph(package_name, lock_file_path):
     if not packages:
         raise ValueError("Блок 'packages' отсутствует в package-lock.json. Проверьте структуру файла.")
 
-
     root_package = packages.get("")
     if not root_package or root_package.get("name") != package_name:
         raise ValueError(f"Пакет {package_name} не найден в корне package-lock.json.")
 
-    def get_dependencies(dep_name, package_info):
+    def get_dependencies(dep_name, package_info, visited):
+        """Получает зависимости для данного пакета, избегая циклических зависимостей."""
+        if dep_name in visited:
+            return {}  # Если пакет уже посещен, пропускаем его
+
+        visited.add(dep_name)
         dep_graph = {dep_name: []}
-        if "dependencies" in package_info:
-            for sub_dep, _ in package_info["dependencies"].items():
-                dep_graph[dep_name].append(sub_dep)
-                sub_dep_info = packages.get(f"node_modules/{sub_dep}", {})
-                dep_graph.update(get_dependencies(sub_dep, sub_dep_info))
+
+        # Проверяем как в "dependencies", так и в "devDependencies"
+        for dep_type in ["dependencies", "devDependencies"]:
+            if dep_type in package_info:
+                for sub_dep, _ in package_info[dep_type].items():
+                    dep_graph[dep_name].append(sub_dep)
+                    sub_dep_info = packages.get(f"node_modules/{sub_dep}", {})
+                    sub_dep_graph = get_dependencies(sub_dep, sub_dep_info, visited)
+                    dep_graph.update(sub_dep_graph)
+
         return dep_graph
 
-    graph = get_dependencies(package_name, root_package)
+    visited = set()
+    graph = get_dependencies(package_name, root_package, visited)
     return graph
-
 
 def generate_mermaid(graph):
 
@@ -111,8 +120,8 @@ if __name__ == "__main__":
     visualizer_path, package_name, output_file = read_config(config_path)
 
 
-    package_link = "https://github.com/expressjs/express.git"
-    working_dir = "D:/dz_config_2/temp_package"
+    package_link = "https://github.com/lodash/lodash.git"
+    working_dir = "D:/dz_config_2/temp_package_2"
 
 
     install_package_from_link(package_link, working_dir)
