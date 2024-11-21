@@ -37,18 +37,18 @@ def install_package_from_link(link, working_dir):
 
 
 def load_package_json(package_json_path):
-    """Загружает package.json."""
+
     with open(package_json_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
 
 def fetch_dependencies(package_json):
-    """Извлекает зависимости из package.json."""
+
     return package_json.get("dependencies", {})
 
 
 def build_dependency_graph(package_name, lock_file_path):
-    """Строит граф зависимостей из package-lock.json."""
+
     if not os.path.exists(lock_file_path):
         raise FileNotFoundError(f"Не найден файл {lock_file_path}. Убедитесь, что зависимости установлены.")
     with open(lock_file_path, "r", encoding="utf-8") as file:
@@ -63,14 +63,14 @@ def build_dependency_graph(package_name, lock_file_path):
         raise ValueError(f"Пакет {package_name} не найден в корне package-lock.json.")
 
     def get_dependencies(dep_name, package_info, visited):
-        """Получает зависимости для данного пакета, избегая циклических зависимостей."""
+
         if dep_name in visited:
-            return {}  # Если пакет уже посещен, пропускаем его
+            return {}
 
         visited.add(dep_name)
         dep_graph = {dep_name: []}
 
-        # Проверяем как в "dependencies", так и в "devDependencies"
+
         for dep_type in ["dependencies", "devDependencies"]:
             if dep_type in package_info:
                 for sub_dep, _ in package_info[dep_type].items():
